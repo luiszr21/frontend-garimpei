@@ -39,6 +39,7 @@ api.interceptors.request.use(config => {
 
   if (token && !ehRotaPublica(config.url)) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log("✅ Token adicionado ao header Authorization");
   } else if (config.headers?.Authorization) {
     delete config.headers.Authorization;
   }

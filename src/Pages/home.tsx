@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../Services/Api";
 import CardProduto from "../components/CardProduto";
 import type { ListarProdutosResponse } from "../types";
 import { useAuthStore } from "../stores/authStore";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
   const [somenteDestaques, setSomenteDestaques] = useState(false);
   const [status, setStatus] = useState("Conectando ao backend...");
   const [produtos, setProdutos] = useState<ListarProdutosResponse>([]);
   const token = useAuthStore((state) => state.token);
+  const logout = useAuthStore((state) => state.logout);
 
   useEffect(() => {
     api
@@ -67,12 +69,34 @@ export default function Home() {
             <span className="text-2xl" aria-hidden="true">👕</span>
             <strong className="text-base font-black">Vitrine </strong>
           </div>
-          <Link
-            to={token ? "/admin" : "/login"}
-            className="text-xs font-semibold text-cyan-300 hover:text-cyan-200"
-          >
-            {token ? "Minha conta" : "Identifique-se"}
-          </Link>
+          <div className="flex items-center gap-3">
+            {token ? (
+              <>
+                <Link
+                  to="/propostas"
+                  className="text-xs font-semibold text-cyan-300 hover:text-cyan-200"
+                >
+                  Minhas propostas
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate("/login");
+                  }}
+                  className="text-xs font-semibold text-red-400 hover:text-red-300"
+                >
+                  Sair
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="text-xs font-semibold text-cyan-300 hover:text-cyan-200"
+              >
+                Identifique-se
+              </Link>
+            )}
+          </div>
         </header>
 
         <form

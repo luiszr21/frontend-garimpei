@@ -18,6 +18,7 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
@@ -108,15 +109,25 @@ export default function Login() {
                 >
                   Senha
                 </label>
-                <input
-                  id="senha"
-                  type="password"
-                  required
-                  value={senha}
-                  onChange={(e) => setSenha(e.target.value)}
-                  className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
-                  placeholder="Sua senha"
-                />
+                <div className="relative">
+                  <input
+                    id="senha"
+                    type={mostrarSenha ? "text" : "password"}
+                    required
+                    value={senha}
+                    onChange={(e) => setSenha(e.target.value)}
+                    className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 pr-12 text-sm text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+                    placeholder="Sua senha"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setMostrarSenha(!mostrarSenha)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                    title={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                  >
+                    {mostrarSenha ? "👁️" : "👁️‍🗨️"}
+                  </button>
+                </div>
               </div>
 
               {erro ? (

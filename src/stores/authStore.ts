@@ -16,21 +16,31 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem("token"),
-  role: (localStorage.getItem("role") as Role) || null,
-  userId: localStorage.getItem("userId"),
+export const useAuthStore = create<AuthState>((set) => {
+  // Ler dados persistidos do localStorage apenas na inicialização
+  const storedToken = localStorage.getItem("token");
+  const storedRole = (localStorage.getItem("role") as Role) || null;
+  const storedUserId = localStorage.getItem("userId");
 
-  login: ({ token, role, userId }) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("role", role || "");
-    localStorage.setItem("userId", userId);
+  return {
+    token: storedToken,
+    role: storedRole,
+    userId: storedUserId,
 
-    set({ token, role, userId });
-  },
+    login: ({ token, role, userId }) => {
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role || "");
+      localStorage.setItem("userId", userId);
 
-  logout: () => {
-    localStorage.clear();
-    set({ token: null, role: null, userId: null });
-  }
-}));
+      set({ token, role, userId });
+    },
+
+    logout: () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("userId");
+
+      set({ token: null, role: null, userId: null });
+    }
+  };
+});

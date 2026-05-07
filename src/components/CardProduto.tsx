@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { Produto } from "../types";
 
 function formatarPreco(valor: number) {
@@ -16,9 +17,15 @@ export default function CardProduto({
 	produto,
 	detalhe,
 }: CardProdutoProps) {
+	const navigate = useNavigate();
+
+	const handleVerDetalhes = () => {
+		navigate(`/produto/${produto.id}`);
+	};
+
 	return (
 		<article className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-			<div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+			<div className="relative aspect-4/3 overflow-hidden bg-slate-100">
 				{produto.imagemUrl ? (
 					<img
 						src={produto.imagemUrl}
@@ -46,6 +53,7 @@ export default function CardProduto({
 				</p>
 				<button
 					type="button"
+					onClick={handleVerDetalhes}
 					className="mt-2 inline-flex items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-cyan-500"
 				>
 					Ver Detalhes
