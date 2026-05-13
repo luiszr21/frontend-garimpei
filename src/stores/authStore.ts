@@ -2,6 +2,16 @@ import { create } from "zustand";
 
 type Role = "user" | "admin" | null;
 
+function isRole(value: string | null): value is Exclude<Role, null> {
+  return value === "user" || value === "admin";
+}
+
+function readRoleFromStorage(): Role {
+  const storedRole = localStorage.getItem("role");
+
+  return isRole(storedRole) ? storedRole : null;
+}
+
 interface AuthState {
   token: string | null;
   role: Role;
@@ -19,7 +29,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => {
   // Ler dados persistidos do localStorage apenas na inicialização
   const storedToken = localStorage.getItem("token");
-  const storedRole = (localStorage.getItem("role") as Role) || null;
+  const storedRole = readRoleFromStorage();
   const storedUserId = localStorage.getItem("userId");
 
   return {

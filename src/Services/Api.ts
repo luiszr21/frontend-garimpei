@@ -42,8 +42,8 @@ api.interceptors.request.use(config => {
 
   if (token && !ehRotaPublica(config.url)) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("✅ Token adicionado ao header Authorization");
-  } else if (config.headers?.Authorization) {
+  } else {
+    // Remover qualquer header Authorization existente se não houver token
     delete config.headers.Authorization;
   }
 
@@ -102,5 +102,5 @@ export async function postAuth<TResponse = unknown>(
     }
   }
 
-  throw ultimoErro ?? new Error("Nao foi possivel conectar ao endpoint de auth.");
+  throw ultimoErro ?? new Error("Não foi possível conectar ao endpoint de auth.");
 }

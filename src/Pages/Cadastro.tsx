@@ -9,11 +9,6 @@ interface RequisitoDeSenha {
   validado: boolean;
 }
 
-interface ApiErrorResponse {
-  erro?: string;
-  campos?: Record<string, string>;
-}
-
 export default function Cadastro() {
   const [nomeUsuario, setNomeUsuario] = useState("");
   const [identificador, setIdentificador] = useState("");
@@ -22,6 +17,7 @@ export default function Cadastro() {
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errosCampo, setErrosCampo] = useState<Record<string, string>>({});
   const [senhaRequisitos, setSenhaRequisitos] = useState<RequisitoDeSenha[]>([]);
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [mostrarConfirmacaoSenha, setMostrarConfirmacaoSenha] = useState(false);
@@ -85,14 +81,8 @@ export default function Cadastro() {
       return;
     }
 
-    // Validação: email
     const email = identificador.trim();
     if (!email) {
-      setErro("Informe um email válido.");
-      return;
-    }
-
-    if (!email.includes("@") || !email.includes(".")) {
       setErro("Informe um email válido.");
       return;
     }
@@ -214,7 +204,7 @@ export default function Cadastro() {
               ) : null}
 
               <input
-                type="text"
+                type="email"
                 required
                 value={identificador}
                 onChange={(e) => setIdentificador(e.target.value)}

@@ -41,7 +41,7 @@ export default function MinhasInteracoes() {
 			.then(([listaPropostas, listaProdutos]) => {
 				setPropostas(listaPropostas);
 				setProdutos(listaProdutos);
-				setStatus(`Voce possui ${listaPropostas.length} proposta(s).`);
+				setStatus(`Você possui ${listaPropostas.length} proposta(s).`);
 			})
 			.catch(() => {
 				setStatus("Falha ao carregar propostas. Tente novamente.");
@@ -60,12 +60,12 @@ export default function MinhasInteracoes() {
 		const mensagemAtual = getMensagemAtual(proposta).trim();
 
 		if (!mensagemAtual) {
-			setStatus("A mensagem da proposta nao pode ficar vazia.");
+			setStatus("A mensagem da proposta não pode ficar vazia.");
 			return;
 		}
 
 		setIdProcessando(proposta.id);
-		setStatus("Salvando alteracao...");
+		setStatus("Salvando alteração...");
 
 		try {
 			await atualizarProposta(proposta.id, mensagemAtual);
@@ -76,7 +76,7 @@ export default function MinhasInteracoes() {
 			);
 			setStatus("Proposta alterada com sucesso.");
 		} catch {
-			setStatus("Nao foi possivel alterar a proposta.");
+			setStatus("Não foi possível alterar a proposta.");
 		} finally {
 			setIdProcessando(null);
 		}
@@ -91,7 +91,7 @@ export default function MinhasInteracoes() {
 			setPropostas((estadoAtual) => estadoAtual.filter((item) => item.id !== proposta.id));
 			setStatus("Proposta desfeita com sucesso.");
 		} catch {
-			setStatus("Nao foi possivel desfazer a proposta.");
+			setStatus("Não foi possível desfazer a proposta.");
 		} finally {
 			setIdProcessando(null);
 		}
@@ -114,7 +114,7 @@ export default function MinhasInteracoes() {
 
 				{!propostas.length ? (
 					<p className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-6 text-sm text-slate-600">
-						Voce ainda nao fez propostas.
+						Você ainda não fez propostas.
 					</p>
 				) : (
 					<section className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -131,10 +131,10 @@ export default function MinhasInteracoes() {
 										Status: {proposta.status}
 									</p>
 									<p className="mt-2 text-sm text-slate-700">
-										<strong>Tamanho:</strong> {produto?.tamanho ?? "Nao informado"}
+										<strong>Tamanho:</strong> {produto?.tamanho ?? "Não informado"}
 									</p>
 									<p className="mt-1 text-sm text-slate-700">
-										<strong>Descricao:</strong> {produto?.descricao ?? "Sem descricao"}
+										<strong>Descrição:</strong> {produto?.descricao ?? "Sem descrição"}
 									</p>
 
 									<label htmlFor={`mensagem-${proposta.id}`} className="mt-3 block text-xs font-semibold uppercase tracking-wide text-slate-600">

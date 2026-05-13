@@ -10,6 +10,7 @@ export default function Produto() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
+  const userId = useAuthStore((state) => state.userId);
   const [produto, setProduto] = useState<ProdutoType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [erro, setErro] = useState("");
@@ -63,6 +64,7 @@ export default function Produto() {
     try {
       const payload: CriarPropostaRequest = {
         produtoId: produto.id,
+        usuarioId: userId!,
         mensagem: mensagem.trim(),
       };
 
@@ -132,7 +134,7 @@ export default function Produto() {
           </Link>
           <Link
             to="/propostas"
-            className="text-xs font-semibold text-cyan-300 hover:text-cyan-200"
+            className="text-xs font-semibold text-slate-300 hover:text-cyan-200"
           >
             Minhas propostas
           </Link>
@@ -236,3 +238,4 @@ export default function Produto() {
     </div>
   );
 }
+

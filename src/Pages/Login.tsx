@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { postAuth } from "../Services/Api";
 import { useAuthStore } from "../stores/authStore";
 
-type Role = "user" | "admin";
-
 interface LoginApiResponse {
   token: string;
   user: {
@@ -15,17 +13,12 @@ interface LoginApiResponse {
   };
 }
 
-interface ApiErrorResponse {
-  erro?: string;
-  campos?: Record<string, string>;
-}
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [tipoAcesso, setTipoAcesso] = useState<Role>("user");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
+  const [errosCampo, setErrosCampo] = useState<Record<string, string>>({});
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const login = useAuthStore((state) => state.login);
@@ -51,8 +44,8 @@ export default function Login() {
         role,
         userId: user.id,
       });
-
-      navigate(role === "admin" ? "/admin" : "/", { replace: true });
+      
+      navigate(role === "admin" ? "/admin" : "/cliente", { replace: true });
     } catch {
       setErro("Email ou senha inválidos.");
     } finally {
@@ -158,7 +151,7 @@ export default function Login() {
             </form>
 
             <p className="mt-6 text-center text-sm text-slate-600">
-              Ainda nao tem conta?{" "}
+              Ainda não tem conta?{" "}
               <button
                 type="button"
                 onClick={() => navigate("/cadastro")}

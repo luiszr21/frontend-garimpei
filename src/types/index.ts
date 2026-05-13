@@ -14,3 +14,9 @@ export type {
 	CriarPropostaRequest,
 	MinhasPropostasResponse,
 } from "./proposta";
+
+export type {
+	DashboardStats,
+	InteracaoAdmin,
+	ListarInteracoesResponse,
+} from "./admin";

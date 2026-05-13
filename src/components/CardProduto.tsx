@@ -56,57 +56,9 @@ export default function CardProduto({
 					onClick={handleVerDetalhes}
 					className="mt-2 inline-flex items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-cyan-500"
 				>
-					{detalhesAbertos ? "Ocultar detalhes" : "Ver detalhes"}
+					Ver detalhes
 					<span aria-hidden="true">→</span>
 				</button>
-
-				{detalhesAbertos ? (
-					<div className="mt-4 space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-						<p className="text-sm text-slate-700">
-							<strong>Nome:</strong> {produto.nome}
-						</p>
-						<p className="text-sm text-slate-700">
-							<strong>Tamanho:</strong> {produto.tamanho ?? "Nao informado"}
-						</p>
-						<p className="text-sm text-slate-700">
-							<strong>Descricao:</strong> {produto.descricao ?? "Sem descricao"}
-						</p>
-
-						{role === "user" && token ? (
-							<div className="space-y-2 pt-2">
-								<label htmlFor={`proposta-${produto.id}`} className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
-									Sua proposta para o admin
-								</label>
-								<textarea
-									id={`proposta-${produto.id}`}
-									value={mensagem}
-									onChange={(event) => setMensagem(event.target.value)}
-									rows={4}
-									placeholder="Ex.: Tenho interesse e posso pagar R$ 120."
-									className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
-								/>
-								<button
-									type="button"
-									onClick={enviarProposta}
-									disabled={enviando}
-									className="inline-flex items-center rounded-md bg-slate-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-								>
-									{enviando ? "Enviando..." : "Enviar proposta"}
-								</button>
-							</div>
-						) : null}
-
-						{!token ? (
-							<p className="text-xs font-medium text-amber-700">
-								Faca login para enviar uma proposta ao admin.
-							</p>
-						) : null}
-
-						{feedback ? (
-							<p className="text-xs font-medium text-slate-700">{feedback}</p>
-						) : null}
-					</div>
-				) : null}
 			</div>
 		</article>
 	);

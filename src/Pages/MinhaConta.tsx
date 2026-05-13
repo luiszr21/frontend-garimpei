@@ -15,7 +15,7 @@ interface MeResponse {
 
 export default function MinhaConta() {
   const [usuario, setUsuario] = useState<MeResponse["user"] | null>(null);
-  const [status, setStatus] = useState("Validando sessao...");
+  const [status, setStatus] = useState("Validando sessão...");
   const [carregandoLogout, setCarregandoLogout] = useState(false);
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
@@ -31,7 +31,7 @@ export default function MinhaConta() {
       .get<MeResponse>("/auth/me")
       .then((res) => {
         setUsuario(res.data.user);
-        setStatus("Sessao valida.");
+        setStatus("Sessão válida.");
       })
       .catch((error: unknown) => {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -40,7 +40,7 @@ export default function MinhaConta() {
           return;
         }
 
-        setStatus("Nao foi possivel carregar os dados da conta.");
+        setStatus("Não foi possível carregar os dados da conta.");
       });
   }, [logout, navigate, token]);
 
