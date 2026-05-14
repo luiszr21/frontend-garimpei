@@ -2,14 +2,19 @@
 import { useNavigate } from "react-router-dom";
 import { postAuth } from "../Services/Api";
 import { useAuthStore } from "../stores/authStore";
+import AdminLoginModal from "../components/AdminLoginModal";
 
 interface LoginApiResponse {
   token: string;
-  user: {
+  role?: "user" | "admin";
+  userId?: string;
+  tipo?: "user" | "admin";
+  user?: {
     id: string;
     nome: string;
     email: string;
-    tipo: "cliente" | "admin";
+    role?: "user" | "admin";
+    tipo?: "user" | "admin";
   };
 }
 
@@ -20,6 +25,7 @@ export default function Login() {
   const [erro, setErro] = useState("");
   const [errosCampo, setErrosCampo] = useState<Record<string, string>>({});
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
 
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
@@ -36,13 +42,24 @@ export default function Login() {
         senha,
       });
 
-      const { token, user } = response.data;
-      const role = user.tipo === "admin" ? "admin" : "user";
+      const { token } = response.data;
+      const role =
+        response.data.role ??
+        response.data.tipo ??
+        response.data.user?.role ??
+        response.data.user?.tipo ??
+        "user";
+      const userId = response.data.userId ?? response.data.user?.id;
+
+      if (!userId) {
+        setErro("Não foi possível identificar o usuário logado.");
+        return;
+      }
 
       login({
         token,
         role,
-        userId: user.id,
+        userId,
       });
       
       navigate(role === "admin" ? "/admin" : "/cliente", { replace: true });
@@ -54,32 +71,31 @@ export default function Login() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#f5f0e7_0%,#e7ecf1_45%,#d8e3ec_100%)] px-4 py-8 md:px-8">
-      <div className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-amber-300/30 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-cyan-300/30 blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden bg-[#12102bd0]
+ px-4 py-8 md:px-8">
+  <div className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-emerald-400/15 blur-3xl" />
+
+  <div className="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-teal-400/15 blur-3xl" />
+
+
 
       <div className="relative mx-auto grid min-h-[85vh] w-full max-w-5xl overflow-hidden rounded-3xl border border-white/40 bg-white/70 shadow-2xl backdrop-blur md:grid-cols-2">
         <aside className="hidden flex-col justify-between bg-slate-900 p-10 text-slate-100 md:flex">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
-              Front Roupas
-            </p>
+        
             <h1 className="mt-5 text-4xl font-black leading-tight">
-              Entre e acompanhe propostas em tempo real.
+              GARIMPEI
             </h1>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">
-              Um painel limpo para negociar produtos, visualizar interações e manter seu fluxo organizado.
+              Cada achado tem uma história. Qual será o seu?
             </p>
           </div>
         </aside>
 
         <section className="flex items-center p-6 sm:p-8 md:p-10">
           <div className="w-full animate-[fadeIn_.45s_ease-out]">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Acesso
-            </p>
             <h2 className="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-              Bem-vindo de volta
+              Bem-vindo ao Garimpei
             </h2>
             <p className="mt-2 text-sm text-slate-600">
               Faça login para continuar no painel.
@@ -155,14 +171,41 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => navigate("/cadastro")}
-                className="font-semibold text-cyan-700 transition hover:text-cyan-600"
+                className="font-semibold text-blue-700 transition hover:text-cyan-600 cursor-pointer"
               >
                 Criar conta
               </button>
             </p>
-          </div>
+
+            <div className="mt-6 border-t border-slate-200 pt-6">
+              <p className="text-center text-sm text-slate-600">
+                É administrador?{" "}
+                <button
+                  type="button"
+                  onClick={() => setAdminModalOpen(true)}
+                  className="font-semibold text-blue-700 transition hover:text-blue-600 cursor-pointer" 
+                >
+                  Entrar como admin
+                </button >
+              </p>
+            </div> 
+          </div> 
+          <div className="mt-10 text-center flex justify-center">
+            <button 
+      onClick={() => navigate("/home")}
+      className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-500"
+    >
+      Ver roupas
+    </button>
+    </div>
         </section>
       </div>
+      <AdminLoginModal
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+      />
     </div>
+
+    
   );
 }

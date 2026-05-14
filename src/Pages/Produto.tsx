@@ -3,20 +3,19 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { api } from "../Services/Api";
 import { useAuthStore } from "../stores/authStore";
 import type { Produto as ProdutoType } from "../types/produto";
-import type { CriarPropostaRequest } from "../types/proposta";
+// import types trimmed - payload sent directly
 import axios from "axios";
 
 export default function Produto() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
-  const userId = useAuthStore((state) => state.userId);
   const [produto, setProduto] = useState<ProdutoType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [isEnviandoProposta, setIsEnviandoProposta] = useState(false);
-  const [propostaPendente, setPropostaPendente] = useState(false);
+  const [propostaPendente] = useState(false);
 
   // Redirecionar se não autenticado
   useEffect(() => {
@@ -62,19 +61,17 @@ export default function Produto() {
     setIsEnviandoProposta(true);
 
     try {
-      const payload: CriarPropostaRequest = {
+      const payload = {
         produtoId: produto.id,
-        usuarioId: userId!,
         mensagem: mensagem.trim(),
       };
 
-      // Enviar proposta para o backend
-      // O backend retorna a proposta com status "pendente" por padrão
+      // Enviar proposta para o backend (token via interceptor)
       await api.post("/propostas", payload);
 
-      setMensagem("");
-      setPropostaPendente(true);
-      setTimeout(() => setPropostaPendente(false), 3000);
+      // Notificar outras telas e redirecionar para minhas propostas
+      window.dispatchEvent(new CustomEvent("propostas:updated"));
+      navigate("/propostas", { replace: true });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const statusCode = error.response?.status;

@@ -98,7 +98,7 @@ export default function Cadastro() {
         senha,
       });
 
-      // ✅ Cadastro bem-sucedido
+      
       setSucesso("Cadastro realizado com sucesso! Redirecionando para o login...");
       
       // Limpar localStorage de qualquer sessão anterior
@@ -145,7 +145,7 @@ export default function Cadastro() {
           }
         } else if (statusCode === 409) {
           // Conflito - email duplicado
-          setErro("Este email já está registrado. Tente fazer login ou use outro email.");
+          setErro("email invalido");
         } else if (statusCode === 500) {
           // Erro no servidor
           setErro("Erro ao processar seu cadastro. Tente novamente em alguns momentos.");
@@ -168,18 +168,16 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#f5f0e7_0%,#e7ecf1_45%,#d8e3ec_100%)] px-4 py-8 md:px-8">
-      <div className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-amber-300/30 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-cyan-300/30 blur-3xl" />
+    <div className="relative min-h-screen overflow-hidden  px-4 py-8 md:px-8">
+      <div className="pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-emerald-400/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-teal-400/15 blur-3xl" />
 
       <div className="relative mx-auto grid min-h-[85vh] w-full max-w-5xl overflow-hidden rounded-3xl border border-white/40 bg-white/70 shadow-2xl backdrop-blur md:grid-cols-2">
         <aside className="hidden flex-col justify-between bg-slate-900 p-10 text-slate-100 md:flex">
           <div>
-            <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">
-              Front Roupas
-            </p>
-            <h1 className="mt-5 text-4xl font-black leading-tight">
-              Crie sua conta e inicie suas negociações.
+          
+            <h1 className="mt-5 text-4xl text-center p-6 font-semibold leading-tight">
+              Crie sua conta e inicie  seus garimpos.
             </h1>
           </div>
         </aside>

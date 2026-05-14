@@ -4,8 +4,26 @@ import axios, {
 } from "axios";
 import { useAuthStore } from "../stores/authStore";
 
+const DEFAULT_BASE = "http://localhost:3001";
+const BASE_URL = (import.meta.env.VITE_API_URL as string) || DEFAULT_BASE;
+
+// Logar baseURL para facilitar debugging em runtime
+console.info("API baseURL:", BASE_URL);
+
 export const api = axios.create({
-  baseURL: "http://localhost:3001"
+  baseURL: BASE_URL,
+});
+
+// Debug: logar cada requisição para inspecionar URLs usadas
+api.interceptors.request.use((config) => {
+  try {
+    // mostrar método e URL final
+    console.debug("API request:", config.method?.toUpperCase(), config.url, "->", `${BASE_URL}${config.url ?? ""}`);
+  } catch {
+    // ignore
+  }
+
+  return config;
 });
 
 function extrairPath(url?: string): string {

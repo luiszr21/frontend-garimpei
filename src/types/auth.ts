@@ -7,5 +7,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  usuario: Usuario;
+  // Backend returns `user` object; keep `usuario` for compatibility
+  user?: Usuario;
+  usuario?: Usuario;
 }

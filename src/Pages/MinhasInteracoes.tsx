@@ -34,18 +34,31 @@ export default function MinhasInteracoes() {
 	const [idProcessando, setIdProcessando] = useState<string | null>(null);
 
 	useEffect(() => {
-		Promise.all([
-			buscarMinhasPropostas(),
-			api.get<Produto[]>("/produtos").then((res) => res.data).catch(() => []),
-		])
-			.then(([listaPropostas, listaProdutos]) => {
+		async function carregar() {
+			try {
+				const [listaPropostas, listaProdutos] = await Promise.all([
+					buscarMinhasPropostas(),
+					api.get<Produto[]>("/produtos").then((res) => res.data).catch(() => []),
+				]);
 				setPropostas(listaPropostas);
 				setProdutos(listaProdutos);
 				setStatus(`Você possui ${listaPropostas.length} proposta(s).`);
-			})
-			.catch(() => {
+			} catch {
 				setStatus("Falha ao carregar propostas. Tente novamente.");
-			});
+			}
+		}
+
+		carregar();
+
+		function onPropostasUpdated() {
+			carregar();
+		}
+
+		window.addEventListener("propostas:updated", onPropostasUpdated as EventListener);
+
+		return () => {
+			window.removeEventListener("propostas:updated", onPropostasUpdated as EventListener);
+		};
 	}, []);
 
 	const produtoPorId = useMemo(() => {

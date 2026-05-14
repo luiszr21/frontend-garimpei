@@ -54,7 +54,7 @@ export default function CardProduto({
 				<button
 					type="button"
 					onClick={handleVerDetalhes}
-					className="mt-2 inline-flex items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-cyan-500"
+					className="cursor-pointer mt-2 inline-flex items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-xs font-bold text-white transition hover:bg-cyan-500"
 				>
 					Ver detalhes
 					<span aria-hidden="true">→</span>

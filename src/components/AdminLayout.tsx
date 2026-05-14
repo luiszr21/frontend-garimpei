@@ -32,7 +32,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white p-5 overflow-y-auto flex flex-col shadow-lg">
         <div className="pb-5 border-b border-slate-700 mb-6">
-          <h1 className="text-2xl font-black">🏪 Admin</h1>
+          <h1 className="text-2xl font-black">Painel Administrativo</h1>
         </div>
 
         {/* Navigation */}

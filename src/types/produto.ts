@@ -5,6 +5,9 @@ export interface Produto {
   nome: string;
   tamanho?: string | null;
   descricao: string | null;
+  estoque?: number | null;
+  categoriaId?: string | null;
+  destaque?: boolean | null;
   preco: number;
   imagemUrl: string | null;
   avaliacao?: number | null;

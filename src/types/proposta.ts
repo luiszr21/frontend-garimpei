@@ -16,7 +16,7 @@ export interface Proposta {
 
 export interface CriarPropostaRequest {
   produtoId: UUID;
-  usuarioId: UUID;
+  usuarioId?: UUID;
   mensagem: string;
 }
 

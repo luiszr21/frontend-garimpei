@@ -36,6 +36,16 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    function onProdutosUpdated() {
+      setLoading(true);
+      getDashboardStats().then(setStats).finally(() => setLoading(false));
+    }
+
+    window.addEventListener("produtos:updated", onProdutosUpdated as EventListener);
+    return () => window.removeEventListener("produtos:updated", onProdutosUpdated as EventListener);
+  }, []);
+
   if (loading) {
     return (
       <AdminLayout>
@@ -60,37 +70,37 @@ export default function Dashboard() {
           <StatsCard
             title="Total de Produtos"
             value={stats.totalProdutos}
-            icon="📦"
+            icon=""
             color="blue"
           />
           <StatsCard
             title="Total de Interações"
             value={stats.totalInteracoes}
-            icon="💬"
+            icon=""
             color="green"
           />
           <StatsCard
             title="Interações Respondidas"
             value={stats.interacoesRespondidas}
-            icon="✅"
+            icon=""
             color="green"
           />
           <StatsCard
             title="Interações Pendentes"
             value={stats.interacoesPendentes}
-            icon="⏳"
+            icon=""
             color="yellow"
           />
           <StatsCard
             title="Total de Usuários"
             value={stats.totalUsuarios}
-            icon="👥"
+            icon=""
             color="purple"
           />
           <StatsCard
             title="Taxa de Resposta"
             value={`${stats.taxaRespostaPorcentagem}%`}
-            icon="📊"
+            icon=""
             color="blue"
           />
         </div>
@@ -198,23 +208,23 @@ export default function Dashboard() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
-                <span className="text-sm text-gray-600">📦 Produtos</span>
+                <span className="text-sm text-gray-600"> Produtos</span>
                 <strong className="text-xl text-gray-900">{stats.totalProdutos}</strong>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-purple-500">
-                <span className="text-sm text-gray-600">👥 Usuários</span>
+                <span className="text-sm text-gray-600"> Usuários</span>
                 <strong className="text-xl text-gray-900">{stats.totalUsuarios}</strong>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-cyan-500">
-                <span className="text-sm text-gray-600">💬 Interações</span>
+                <span className="text-sm text-gray-600"> Interações</span>
                 <strong className="text-xl text-gray-900">{stats.totalInteracoes}</strong>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
-                <span className="text-sm text-gray-600">✅ Respondidas</span>
+                <span className="text-sm text-gray-600"> Respondidas</span>
                 <strong className="text-xl text-gray-900">{stats.interacoesRespondidas}</strong>
               </div>
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-yellow-500">
-                <span className="text-sm text-gray-600">⏳ Pendentes</span>
+                <span className="text-sm text-gray-600"> Pendentes</span>
                 <strong className="text-xl text-gray-900">{stats.interacoesPendentes}</strong>
               </div>
             </div>

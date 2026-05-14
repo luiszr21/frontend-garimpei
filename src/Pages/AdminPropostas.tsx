@@ -32,6 +32,15 @@ export default function AdminPropostas() {
     carregarInteracoes();
   }, [filtro]);
 
+  useEffect(() => {
+    function onPropostasUpdated() {
+      carregarInteracoes();
+    }
+
+    window.addEventListener("propostas:updated", onPropostasUpdated as EventListener);
+    return () => window.removeEventListener("propostas:updated", onPropostasUpdated as EventListener);
+  }, []);
+
   // Responder interação
   const handleResponder = async (id: string) => {
     if (!resposta.trim()) {
@@ -287,7 +296,7 @@ export default function AdminPropostas() {
                           onClick={() => setSelectedId(interacao.id)}
                           className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded transition-colors"
                         >
-                          💬 Responder
+                           Responder
                         </button>
                       ) : (
                         <button
@@ -297,21 +306,11 @@ export default function AdminPropostas() {
                           }}
                           className="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-semibold rounded transition-colors"
                         >
-                          ✕ Fechar
+                           Fechar
                         </button>
                       )}
                     </>
                   )}
-
-                  <button
-                    onClick={() =>
-                      handleEnviarEmail(interacao.id, interacao.usuarioEmail)
-                    }
-                    className="px-3 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-semibold rounded transition-colors"
-                    title="Enviar email"
-                  >
-                    ✉️ Email
-                  </button>
 
                   {interacao.status === "respondida" && (
                     <button
@@ -319,7 +318,7 @@ export default function AdminPropostas() {
                       className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded transition-colors"
                       title="Confirmar"
                     >
-                      ✅ Confirmar
+                       Confirmar
                     </button>
                   )}
 
@@ -328,7 +327,7 @@ export default function AdminPropostas() {
                     className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded transition-colors"
                     title="Excluir"
                   >
-                    🗑️ Excluir
+                     Excluir
                   </button>
                 </div>
               </div>

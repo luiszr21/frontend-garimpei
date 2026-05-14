@@ -7,11 +7,14 @@ interface FormProduto extends Omit<Produto, "id"> {
   id?: string;
 }
 
-const produtoVazio: FormProduto = {
+  const produtoVazio: FormProduto = {
   nome: "",
   descricao: "",
   preco: 0,
   tamanho: "",
+  estoque: 1,
+  categoriaId: "",
+    destaque: false,
   imagemUrl: "",
 };
 
@@ -45,10 +48,20 @@ export default function GerenciamentoProdutos() {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+    let nextValue: string | number | boolean = value;
+
+    if (type === "number") {
+      nextValue = value === "" ? "" : parseFloat(value);
+    }
+
+    if (type === "checkbox") {
+      nextValue = checked;
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "preco" ? parseFloat(value) : value,
+      [name]: nextValue,
     }));
   };
 
@@ -59,6 +72,11 @@ export default function GerenciamentoProdutos() {
     setSucesso(null);
 
     try {
+      // Validação mínima
+      if (!editingId && (formData.estoque === undefined || Number(formData.estoque) <= 0)) {
+        setError("Estoque deve ser maior que zero para o produto aparecer na listagem pública.");
+        return;
+      }
       if (editingId) {
         // Atualizar produto
         await api.put(`/admin/produtos/${editingId}`, formData);
@@ -69,7 +87,9 @@ export default function GerenciamentoProdutos() {
         setSucesso("Produto criado com sucesso!");
       }
 
+      // Recarregar e notificar outras telas
       await carregarProdutos();
+      window.dispatchEvent(new CustomEvent("produtos:updated"));
       setFormData(produtoVazio);
       setEditingId(null);
       setShowForm(false);
@@ -97,7 +117,9 @@ export default function GerenciamentoProdutos() {
       setError(null);
       await api.delete(`/admin/produtos/${id}`);
       setSucesso("Produto deletado com sucesso!");
-      await carregarProdutos();
+      // Atualizar lista localmente e notificar
+      setProdutos((atual) => atual.filter((p) => p.id !== id));
+      window.dispatchEvent(new CustomEvent("produtos:updated"));
     } catch {
       setError("Erro ao deletar produto");
     }
@@ -137,9 +159,9 @@ export default function GerenciamentoProdutos() {
           {!showForm && (
             <button
               onClick={() => setShowForm(true)}
-              className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg whitespace-nowrap transition-colors"
+              className="px-6 py-2 bg-blue-500 hover:bg-green-600 text-white font-semibold rounded-lg whitespace-nowrap transition-colors"
             >
-              ➕ Novo Produto
+               Novo Produto
             </button>
           )}
         </div>
@@ -214,6 +236,39 @@ export default function GerenciamentoProdutos() {
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="estoque" className="block text-sm font-medium text-gray-700 mb-2">
+                    Estoque
+                  </label>
+                  <input
+                    type="number"
+                    id="estoque"
+                    name="estoque"
+                    value={formData.estoque ?? 1}
+                    onChange={handleInputChange}
+                    required
+                    min="1"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="categoriaId" className="block text-sm font-medium text-gray-700 mb-2">
+                    Categoria (opcional)
+                  </label>
+                  <input
+                    type="text"
+                    id="categoriaId"
+                    name="categoriaId"
+                    value={formData.categoriaId || ""}
+                    onChange={handleInputChange}
+                    placeholder="ID da categoria"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label htmlFor="descricao" className="block text-sm font-medium text-gray-700 mb-2">
                   Descrição
@@ -259,9 +314,26 @@ export default function GerenciamentoProdutos() {
                   Cancelar
                 </button>
               </div>
+              
+        {/* Destaque toggle (aparece mesmo quando não editando) */}
+        {showForm && (
+          <div className="mb-8 ">
+            <label className="flex items-center gap-1  font-medium">
+              <input
+                type="checkbox"
+                name="destaque"
+                checked={!!formData.destaque}
+                onChange={handleInputChange}
+              />
+              <span>Mostrar como destaque</span>
+            </label>
+          </div>
+        )}
             </form>
           </div>
         )}
+
+       
 
         {/* Products Grid */}
         <div className="bg-white rounded-xl p-6 shadow-md">
